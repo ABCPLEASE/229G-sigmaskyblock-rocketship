@@ -49,6 +49,5 @@ public class SpawnManager : MonoBehaviour
     {
         Transform spawnPoint = meteoriteSpawnPoints[Random.Range(0, meteoriteSpawnPoints.Length)];
         ObjectPooler.Instance.SpawnFromPool(meteoriteTag, spawnPoint.position, Quaternion.identity);
-
     }
 }
