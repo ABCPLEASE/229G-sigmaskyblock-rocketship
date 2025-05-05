@@ -17,8 +17,7 @@ public class BulletCollision : MonoBehaviour
             other.gameObject.SetActive(false);
             Destroy(gameObject);
 
-            // Add score when player destroys a meteorite
-            ScoreManager.Instance.AddScore(2); // Award 2 points
+            ScoreManager.Instance.AddScore(2); 
         }
 
    

@@ -110,6 +110,7 @@ public class EnemyController : MonoBehaviour
     {
         Debug.Log("Enemy Died!");
         gameObject.SetActive(false);
+        ScoreManager.Instance.AddScore(1);
     }
 
     void OnTriggerEnter2D(Collider2D other)

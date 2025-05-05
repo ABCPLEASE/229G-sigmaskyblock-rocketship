@@ -26,11 +26,19 @@ public class PlayerMovement : MonoBehaviour
     private int currentHealth;
     public float invincibleTime = 1f;
     private bool isInvincible = false;
+    public HealthUI healthUI; // Drag the UI script here in Inspector
+
+    // --- SFX ---
+    public AudioClip shootSound;
+    public AudioClip damageSound;
+    public AudioClip reloadSound;
+    private AudioSource audioSource;
 
     void Start()
     {
-        currentAmmo = maxAmmo;
         currentHealth = maxHealth;
+        currentAmmo = maxAmmo;
+        healthUI?.UpdateHealth(currentHealth, maxHealth); // Initial update
 
         if (leftBoundary.position.x > rightBoundary.position.x)
         {
@@ -47,6 +55,9 @@ public class PlayerMovement : MonoBehaviour
 
         if (bgScroller != null)
             bgScroller.scrollSpeed = normalScrollSpeed;
+
+        // Initialize the AudioSource component
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -95,6 +106,12 @@ public class PlayerMovement : MonoBehaviour
 
             Destroy(proj, 2f);
         }
+
+        // Play shoot sound effect
+        if (shootSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(shootSound);
+        }
     }
 
     Vector2 CalculateProjectileVelocity(Vector2 origin, Vector2 target, float time)
@@ -108,6 +125,12 @@ public class PlayerMovement : MonoBehaviour
     void ReloadAmmo()
     {
         currentAmmo = maxAmmo;
+
+        // Play reload sound effect
+        if (reloadSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(reloadSound);
+        }
     }
 
     // --- HP Methods ---
@@ -116,7 +139,13 @@ public class PlayerMovement : MonoBehaviour
         if (isInvincible) return;
 
         currentHealth -= amount;
-        Debug.Log("Player HP: " + currentHealth);
+        healthUI?.UpdateHealth(currentHealth, maxHealth);
+
+        // Play damage sound effect
+        if (damageSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(damageSound);
+        }
 
         if (currentHealth <= 0)
         {
@@ -141,7 +170,6 @@ public class PlayerMovement : MonoBehaviour
         gameObject.SetActive(false); // Or play animation, trigger game over, etc.
     }
 
-   
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Meteorite") || other.CompareTag("EnemyBullet"))
@@ -149,5 +177,4 @@ public class PlayerMovement : MonoBehaviour
             TakeDamage(1);
         }
     }
-
 }
